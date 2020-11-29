@@ -1,37 +1,51 @@
-let cookies = require("../cookies");
-const slugify = require("slugify");
+const { Cookie } = require("../db/models");
 
-exports.cookieList = (req, res) => {
-  res.json(cookies);
-};
-
-exports.cookieDelete = (req, res) => {
-  const { cookieId } = req.params;
-  const foundCookie = cookies.find((cookie) => cookie.id === +cookieId);
-  if (foundCookie) {
-    cookies = cookies.filter((cookie) => cookie.id !== +cookieId);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: "Cookie not found." });
+exports.cookieList = async (req, res) => {
+  try {
+    const cookies = await Cookie.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] }
+    })
+    res.json(cookies);
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
 };
 
-exports.cookieCreate = (req, res) => {
-  const id = cookies[cookies.length - 1].id + 1;
-  const slug = slugify(req.body.name, { lower: true });
-  const newCookie = { id, slug, ...req.body };
-  cookies.push(newCookie);
-  res.status(201).json(newCookie);
+exports.cookieDelete = async (req, res) => {
+  const { cookieId } = req.params;
+  try {
+    const foundCookie = await Cookie.findByPk(cookieId);
+    if (foundCookie) {
+      await foundCookie.destroy(); // 💥
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Cookie not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
 };
 
-exports.cookieUpdate = (req, res) => {
+exports.cookieCreate = async (req, res) => {
+  try {
+    const newCookie = await Cookie.create(req.body);
+    res.status(201).json(newCookie);
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+};
+
+exports.cookieUpdate = async (req, res) => {
   const { cookieId } = req.params;
-  const foundCookie = cookies.find((cookie) => cookie.id === +cookieId);
-  if (foundCookie) {
-    for (const key in req.body) foundCookie[key] = req.body[key];
-    foundCookie.slug = slugify(req.body.name, { lower: true });
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: "Cookie not found." });
+  try {
+    const foundCookie = await Cookie.findByPk(cookieId);
+    if (foundCookie) {
+      await foundCookie.update(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Cookie not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
 };
