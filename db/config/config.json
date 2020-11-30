@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "TheMshary",
+    "username": "whalez",
     "password": null,
     "database": "cookieshop_db",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
   },
   "test": {
     "username": "root",
