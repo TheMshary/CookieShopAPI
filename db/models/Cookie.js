@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     slug: {
       type: DataTypes.STRING,
-      unique: true
+      unique: true,
     },
     description: {
       type: DataTypes.STRING,
@@ -18,18 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 5,
       validate: {
-        min: 1
-      }
+        min: 1,
+      },
     },
     image: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  })
+  });
 
   SequelizeSlugify.slugifyModel(Cookie, {
-    source: ["name"]
-  })
+    source: ["name"],
+  });
 
   return Cookie;
 };

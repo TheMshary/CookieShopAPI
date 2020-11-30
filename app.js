@@ -3,23 +3,21 @@ const db = require("./db/models");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieRoutes = require("./routes/cookies");
+const path = require("path");
 
 const app = express();
 
-app.use((req, res, next) => {
-  console.log("I'm the first ammmamaaaziinnnngggg middleware method!!");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("I'm an amaaaaaziiinnnnng middleware method");
-  next();
-});
+console.log("directory name");
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+const mediaPath = path.join(__dirname, "media");
+
+// Routes
 app.use("/cookies", cookieRoutes);
+app.use("/media", express.static(mediaPath));
 
 // NOT FOUND PATH MIDDLEWARE
 app.use((req, res, next) => {

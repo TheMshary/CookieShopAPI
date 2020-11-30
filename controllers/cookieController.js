@@ -31,16 +31,28 @@ exports.cookieDelete = async (req, res, next) => {
 };
 
 exports.cookieCreate = async (req, res, next) => {
+  console.log(
+    "🚀 ~ file: cookieController.js ~ line 1 ~ exports.cookieCreate= ~ req.body",
+    req.file.filename
+  );
+
+  console.log(req.get("host"));
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    }
     const newCookie = await Cookie.create(req.body);
     res.status(201).json(newCookie);
   } catch (error) {
-    next(errror);
+    next(error);
   }
 };
 
 exports.cookieUpdate = async (req, res, next) => {
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    }
     await req.cookie.update(req.body);
     res.status(204).end();
   } catch (error) {
