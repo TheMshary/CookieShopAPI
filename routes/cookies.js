@@ -26,9 +26,6 @@ router.param("cookieId", async (req, res, next, cookieIdVariable) => {
 // Cookie List
 router.get("/", cookieList);
 
-// Cookie Create
-router.post("/", upload.single("image"), cookieCreate);
-
 // Cookie Delete
 router.delete("/:cookieId", cookieDelete);
 

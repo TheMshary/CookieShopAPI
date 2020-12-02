@@ -3,6 +3,7 @@ const db = require("./db/models");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieRoutes = require("./routes/cookies");
+const bakeryRoutes = require("./routes/bakeries");
 const path = require("path");
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 const mediaPath = path.join(__dirname, "media");
 
 // Routes
+app.use("/bakeries", bakeryRoutes);
 app.use("/cookies", cookieRoutes);
 app.use("/media", express.static(mediaPath));
 
@@ -33,7 +35,9 @@ app.use((err, req, res, next) => {
 
 const run = async () => {
   try {
+    // await db.sequelize.sync();
     await db.sequelize.sync({ alter: true });
+    // await db.sequelize.sync({ force: true });
     console.log("Connection to the database successful!");
     app.listen(8000, () => {
       console.log("The application is running on localhost:8000");
