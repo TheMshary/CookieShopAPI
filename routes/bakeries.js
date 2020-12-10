@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("passport");
 const router = express.Router();
 const {
   bakeryList,
@@ -11,9 +12,19 @@ const upload = require("../middleware/multer");
 router.get("/", bakeryList);
 
 // Bakery Create
-router.post("/", upload.single("image"), bakeryCreate);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  bakeryCreate
+);
 
 // Cookie Create
-router.post("/:bakeryId/cookies", upload.single("image"), cookieCreate);
+router.post(
+  "/:bakeryId/cookies",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  cookieCreate
+);
 
 module.exports = router;

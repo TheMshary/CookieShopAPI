@@ -4,15 +4,19 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieRoutes = require("./routes/cookies");
 const bakeryRoutes = require("./routes/bakeries");
+const userRoutes = require("./routes/users");
 const path = require("path");
+const passport = require("passport");
+const { localStrategy, jwtStrategy } = require("./middleware/passport");
 
 const app = express();
-
-console.log("directory name");
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(passport.initialize());
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 const mediaPath = path.join(__dirname, "media");
 
@@ -20,6 +24,7 @@ const mediaPath = path.join(__dirname, "media");
 app.use("/bakeries", bakeryRoutes);
 app.use("/cookies", cookieRoutes);
 app.use("/media", express.static(mediaPath));
+app.use(userRoutes);
 
 // NOT FOUND PATH MIDDLEWARE
 app.use((req, res, next) => {

@@ -1,9 +1,9 @@
 const express = require("express");
+const passport = require("passport");
 const router = express.Router();
 const {
   cookieList,
   cookieDelete,
-  cookieCreate,
   cookieUpdate,
   fetchCookie,
 } = require("../controllers/cookieController");
@@ -27,9 +27,18 @@ router.param("cookieId", async (req, res, next, cookieIdVariable) => {
 router.get("/", cookieList);
 
 // Cookie Delete
-router.delete("/:cookieId", cookieDelete);
+router.delete(
+  "/:cookieId",
+  passport.authenticate("jwt", { session: false }),
+  cookieDelete
+);
 
 // Cookie Update
-router.put("/:cookieId", upload.single("image"), cookieUpdate);
+router.put(
+  "/:cookieId",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  cookieUpdate
+);
 
 module.exports = router;
