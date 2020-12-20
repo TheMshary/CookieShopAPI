@@ -12,6 +12,7 @@ exports.fetchCookie = async (cookieId, next) => {
 
 exports.cookieList = async (req, res, next) => {
   try {
+    console.log("LIST");
     const cookies = await Cookie.findAll({
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {

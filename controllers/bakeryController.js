@@ -12,6 +12,7 @@ exports.bakeryList = async (req, res, next) => {
         },
       ],
     });
+    console.log(bakeries);
     res.json(bakeries);
   } catch (error) {
     next(error);
@@ -43,13 +44,14 @@ exports.bakeryCreate = async (req, res, next) => {
 
 exports.cookieCreate = async (req, res, next) => {
   try {
+    console.log(req.user.id);
     const bakery = await Bakery.findOne({
       where: {
         userId: req.user.id,
       },
     });
     if (bakery) {
-      if (bakery.id === req.params.bakeryId) {
+      if (bakery.id === +req.params.bakeryId) {
         if (req.file) {
           req.body.image = `http://${req.get("host")}/media/${
             req.file.filename
@@ -58,6 +60,12 @@ exports.cookieCreate = async (req, res, next) => {
         req.body.bakeryId = req.params.bakeryId;
         const newCookie = await Cookie.create(req.body);
         res.status(201).json(newCookie);
+      } else {
+        const err = new Error(
+          "Access denied. You are not the owner of this bakery."
+        );
+        err.status = 401;
+        return next(err);
       }
     } else {
       const err = new Error("Bakery Not Found");
