@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieRoutes = require("./routes/cookies");
 const bakeryRoutes = require("./routes/bakeries");
 const userRoutes = require("./routes/users");
+const orderRoutes = require("./routes/orders");
 const path = require("path");
 const passport = require("passport");
 const { localStrategy, jwtStrategy } = require("./middleware/passport");
@@ -25,6 +26,7 @@ app.use("/bakeries", bakeryRoutes);
 app.use("/cookies", cookieRoutes);
 app.use("/media", express.static(mediaPath));
 app.use(userRoutes);
+app.use(orderRoutes);
 
 // NOT FOUND PATH MIDDLEWARE
 app.use((req, res, next) => {

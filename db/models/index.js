@@ -58,7 +58,18 @@ db.Cookie.belongsTo(db.Bakery, {
 });
 
 db.User.hasOne(db.Bakery, { as: "bakery", foreignKey: "userId" });
-
 db.Bakery.belongsTo(db.User, { as: "user" });
+
+db.User.hasMany(db.Order, { as: "orders", foreignKey: "userId" });
+db.Order.belongsTo(db.User, { as: "user" });
+
+db.Order.belongsToMany(db.Cookie, {
+  through: db.OrderItem,
+  foreignKey: "orderId",
+});
+db.Cookie.belongsToMany(db.Order, {
+  through: db.OrderItem,
+  foreignKey: "cookieId",
+});
 
 module.exports = db;
